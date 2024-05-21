@@ -1,8 +1,6 @@
-scikit-learn
-tensorflow
 pandas
 numpy
-pickle
+scikit-learn
+keras
+tensorflow
 streamlit
-seaborn
-matplotlib
