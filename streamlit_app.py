@@ -6,7 +6,7 @@ from keras.models import load_model
 import matplotlib.pyplot as plt
 
 # Load the model
-model = load_model("rnn.h5")
+model = load_model("rnn.pkl")
 
 # Set page config
 st.set_page_config(page_title="📈 Waste Load Predictor", layout="centered")
