@@ -2,11 +2,12 @@ import pandas as pd
 import numpy as np
 from sklearn.preprocessing import MinMaxScaler
 import streamlit as st
-from keras.models import load_model
 import matplotlib.pyplot as plt
+import pickle
 
-# Load the model
-model = load_model("rnn.pkl")
+# Load the model using pickle
+with open("rnn.pkl", "rb") as file:
+    model = pickle.load(file)
 
 # Set page config
 st.set_page_config(page_title="📈 Waste Load Predictor", layout="centered")
@@ -51,16 +52,16 @@ def predict_next_7_days(data):
         X_train.append(training_set_scaled[i - time_steps:i, 0])
 
     X_train = np.array(X_train)
-    X_train = np.reshape(X_train, (X_train.shape[0], X_train.shape[1], 1))
+    X_train = np.reshape(X_train, (X_train.shape[0], X_train.shape[1]))
 
     start_idx = np.random.randint(0, len(X_train) - 1)
     last_sequence = X_train[start_idx]
 
     predicted = []
     for _ in range(7):
-        pred = model.predict(last_sequence.reshape(1, time_steps, 1), verbose=0)
-        predicted.append(pred[0][0])
-        last_sequence = np.append(last_sequence[1:], [[pred[0][0]]], axis=0)
+        pred = model.predict(last_sequence.reshape(1, -1))  # assuming scikit-learn model
+        predicted.append(pred[0])
+        last_sequence = np.append(last_sequence[1:], pred)
 
     predicted = sc.inverse_transform(np.array(predicted).reshape(-1, 1))
     return predicted
