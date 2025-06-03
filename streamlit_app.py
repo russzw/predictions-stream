@@ -59,9 +59,11 @@ def predict_next_7_days(data):
 
     predicted = []
     for _ in range(7):
-        pred = model.predict(last_sequence.reshape(1, -1))  # assuming scikit-learn model
-        predicted.append(pred[0])
-        last_sequence = np.append(last_sequence[1:], pred)
+        pred = model.predict(last_sequence.reshape(1, -1))
+        single_val = pred[0] if np.isscalar(pred[0]) else pred[0][0]
+        predicted.append(single_val)
+        last_sequence = np.append(last_sequence[1:], single_val)
+
 
     predicted = sc.inverse_transform(np.array(predicted).reshape(-1, 1))
     return predicted
